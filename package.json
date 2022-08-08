@@ -1,0 +1,28 @@
+{
+  "name": "employeetracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node db/seeds/seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maharjn/EmployeeTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Maharjn/EmployeeTracker/issues"
+  },
+  "homepage": "https://github.com/Maharjn/EmployeeTracker#readme",
+  "dependencies": {
+    "inquirer": "^8.1.0",
+    "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.3.0",
+    "dotenv": "^16.0.1"
+  }
+}
