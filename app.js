@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const { getDepartments, addDepartment } = require('./operations/department');
-const { getEmployees,viewAllRoles,addRole } = require('./operations/employee');
+const { getEmployees,viewAllRoles,addRole,updateRoles,addEmployee } = require('./operations/employee');
 
 
 
@@ -16,6 +16,7 @@ function main(){
         'View all Employees',
         'View all roles',   
         'Add a role',
+        'Add a Employee',
         'Update employee roles',   // once user selected this, should see a list of employee name to choose from, select the new role
         'exit',
       ]
@@ -54,6 +55,14 @@ function main(){
       case "Add a role":
         const insertRoles = await addRole();
         break;
+
+      case "Add a Employee":
+          const insertEmployee = await addEmployee();
+          break;
+      case "Update employee roles":
+          const modifyRoles = await updateRoles();
+          break;
+
       case "exit":
         process.exit(0);
         break;

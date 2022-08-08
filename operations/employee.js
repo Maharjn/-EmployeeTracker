@@ -81,16 +81,89 @@ async function getDepartments()  {
   
   return departments;
 }
-async function getIDDetails()  {
+
+async function updateRoles(){
   const db = await connect();
 
-  const count = await db.query('SELECT COUNT(*) FROM employee_cms_demo.roles');
-  
-  return count;
+  const [empDetails] = await db.query('SELECT * FROM employee_cms_demo.employees');
+
+  const employeeSelected = await inquirer
+  .prompt([
+    {
+      name: 'id',
+      type: 'list',
+      choices: empDetails.map(employees => ({name:employees.first_name + " " + employees.last_name, value: employees.id})),
+      message: 'Whose role would you like to update? ',
+    }
+  ])
+
+  const [rolesDetails] = await db.query('SELECT * FROM employee_cms_demo.roles');
+  const roleSelected = await inquirer
+  .prompt([
+    {
+      name: 'role_id',
+      type: 'list',
+      choices: rolesDetails.map(role => ({name:role.title, value: role.id})),
+      message: 'What is their new role? ',
+    }
+  ])
+  const [updateQuery] = await db.query(`UPDATE employee_cms_demo.employees SET role_id=? WHERE id=?'`,roleSelected.role_id,employeeSelected.id);
+
 }
+
+async function addEmployee(){
+  const db = await connect();
+
+  const [rolesDetails] = await db.query('SELECT * FROM employee_cms_demo.roles');
+
+  var [employeeDetails] = await db.query('Select * FROM employee_cms_demo.employees WHERE manager_id IS NULL');
+  
+  employeeDetails = employeeDetails.map(manager => ({name:manager.first_name + " " + manager.last_name, value: manager.id}));
+  employeeDetails.push({name:"None"});
+  const responses = await inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is the employee's first name? ",
+          name: "first_name"
+        },
+        {
+          type: "input",
+          message: "What is the employee's last name? ",
+          name: "last_name"
+        },
+        {
+          type: "list",
+          message: "What is the employee's role? ",
+          choices: rolesDetails.map(role => ({name:role.title, value: role.id})),
+          name: "role_id"
+        },
+        {
+          type: "list",
+          message: "Who is the employee's manager? ",
+          choices: employeeDetails,
+          name: "manager_id"
+        }
+      ])
+      if (responses.manager_id === "None") {
+        responses.manager_id = null;
+      }
+
+      await db.query('INSERT INTO employee_cms_demo.employees SET ?',
+      {
+        first_name: responses.first_name,
+        last_name: responses.last_name,
+        role_id: responses.role_id,
+        manager_id: responses.manager_id
+      });
+
+}
+
 module.exports = {
 
   getEmployees,
   viewAllRoles,
-  addRole
+  addRole,
+  updateRoles,
+  addEmployee
 }
