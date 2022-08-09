@@ -90,7 +90,7 @@ async function updateRoles(){
   const employeeSelected = await inquirer
   .prompt([
     {
-      name: 'id',
+      name: 'emp_id',
       type: 'list',
       choices: empDetails.map(employees => ({name:employees.first_name + " " + employees.last_name, value: employees.id})),
       message: 'Whose role would you like to update? ',
@@ -107,8 +107,17 @@ async function updateRoles(){
       message: 'What is their new role? ',
     }
   ])
-  const [updateQuery] = await db.query(`UPDATE employee_cms_demo.employees SET role_id=? WHERE id=?'`,roleSelected.role_id,employeeSelected.id);
-
+ // const [updateQuery] = await db.query('UPDATE employee_cms_demo.employees SET role_id=(?) WHERE id = (?)',roleSelected.role_id,employeeSelected.emp_id);
+ const [updateQuery] = await db.query('UPDATE employee_cms_demo.employees SET ? WHERE ?',
+ [
+   {
+     role_id: roleSelected.role_id,
+   },
+   {
+     id: employeeSelected.emp_id, 
+   }
+ ]);
+ console.log (updateQuery);
 }
 
 async function addEmployee(){
@@ -157,6 +166,56 @@ async function addEmployee(){
         manager_id: responses.manager_id
       });
 
+}
+
+async function updateEmpManager(){
+  const db = await connect();
+
+  const [empDetails] = await db.query('SELECT * FROM employee_cms_demo.employees');
+
+  const employeeSelected = await inquirer
+  .prompt([
+    {
+      name: 'emp_id',
+      type: 'list',
+      choices: empDetails.map(employees => ({name:employees.first_name + " " + employees.last_name, value: employees.id})),
+      message: "Which employee would you like to update?",
+    }
+  ])
+
+  const [rolesDetails] = await db.query('SELECT * FROM employee_cms_demo.roles');
+  const roleSelected = await inquirer
+  .prompt([
+    {
+      name: 'mgr_id',
+      type: 'list',
+      choices: rolesDetails.map(role => ({name:role.title, value: role.id})),
+      message: "Who is the employee's manager?",
+    }
+  ])
+  
+ // const [updateQuery] = await db.query('UPDATE employee_cms_demo.employees SET role_id=(?) WHERE id = (?)',roleSelected.role_id,employeeSelected.emp_id);
+ const [updateQuery] = await db.query('UPDATE employee_cms_demo.employees SET ? WHERE ?',
+ [
+   {
+     manager_id: employeeSelected.mgr_id,
+   },
+   {
+     id: roleSelected.emp_id, 
+   }
+ ]);
+
+
+ 
+}
+
+async function viewAllEmp()
+{
+  const db = await connect();
+
+  const [empDetails] = await db.query('SELECT * FROM employee_cms_demo.employees');
+
+  return empDetails;
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ const { getEmployees,viewAllRoles,addRole,updateRoles,addEmployee } = require('.
 function main(){
   return inquirer.prompt([
     {
-      message: "What you want?",
+      message: "What would you like to do?",
       type: 'list',
       name: 'operation',
       choices: [
@@ -62,7 +62,6 @@ function main(){
       case "Update employee roles":
           const modifyRoles = await updateRoles();
           break;
-
       case "exit":
         process.exit(0);
         break;
