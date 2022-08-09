@@ -18,7 +18,7 @@ This is an employee management system command line application. This application
 ## Application Demo
 The following video link shows the functionality of the Employee Tracker application:
 
-[README Generator application demo](./demo-video/)
+[Employee Tracker application demo](./demo-video/Employee_Tracker_Demo.webm)
 
 ## Installation
 'npm init' , 'npm i inquirer@8.2.4' and npm install @faker-js/faker --save-dev is required
